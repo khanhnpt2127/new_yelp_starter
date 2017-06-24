@@ -12,32 +12,29 @@ class BusinessesViewController: UIViewController {
     
     @IBOutlet weak var businessTableView: UITableView!
     var businesses: [Business]!
-    
+    var searchView: UISearchBar!
     override func viewDidLoad() {
         super.viewDidLoad()
         
         businesses = [Business]()
+        
+        
         self.businessTableView.dataSource = self
         self.businessTableView.delegate = self
         self.businessTableView.estimatedRowHeight = 100
         self.businessTableView.rowHeight = UITableViewAutomaticDimension
-        Business.search(with: "Thai") { (businesses: [Business]?, error: Error?) in
-            if let businesses = businesses {
-                self.businesses = businesses
-                    
-                for business in businesses {
-                    print(business.name!)
-                    print(business.address!)
-                }
-            }
-            
-            
-            self.businessTableView.reloadData()
-            
-            
-            
-            
-        }
+        
+        self.searchView = UISearchBar()
+        searchView = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50))
+        searchView.placeholder = "Search"
+        searchView.showsCancelButton = false
+        self.navigationItem.titleView = searchView
+        searchView.delegate = self
+        
+        fetchData(searchValue: "")
+        
+        
+        
         
         // Example of Yelp search with more search options specified
         /*
@@ -52,6 +49,27 @@ class BusinessesViewController: UIViewController {
          }
          }
          */
+    }
+    
+    
+    
+    func fetchData(searchValue: String){
+        
+        Business.search(with: searchValue) { (businesses: [Business]?, error: Error?) in
+            if let businesses = businesses {
+                self.businesses = businesses
+                
+                for business in businesses {
+                    print(business.name!)
+                    print(business.address!)
+                }
+            }
+            
+            
+            self.businessTableView.reloadData()
+            
+        }
+        
     }
     
 }
@@ -80,3 +98,31 @@ extension BusinessesViewController: UITableViewDataSource, UITableViewDelegate {
     
     
 }
+
+
+extension BusinessesViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+    }
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        self.searchView.showsCancelButton = true
+        
+        return true
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.fetchData(searchValue: self.searchView.text!)
+    }
+    
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchView.text = ""
+        self.fetchData(searchValue: "")
+        self.searchView.showsCancelButton = false
+        searchView.endEditing(true)
+    }
+    
+}
+
+

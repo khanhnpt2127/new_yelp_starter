@@ -24,6 +24,27 @@ class BusinessesViewController: UIViewController {
         self.businessTableView.estimatedRowHeight = 100
         self.businessTableView.rowHeight = UITableViewAutomaticDimension
         
+        
+        
+        
+        
+        let customBarButton = UIButton(frame: CGRect(x: 0, y: 0, width: 80, height: 30))
+        customBarButton.backgroundColor = UIColor.clear
+        customBarButton.layer.borderWidth = 1
+        customBarButton.layer.cornerRadius = 5
+        customBarButton.titleEdgeInsets = UIEdgeInsetsMake(4, 4, 4, 4)
+        customBarButton.layer.borderColor = UIColor.white.cgColor
+//        customBarButton.layer.shadowColor = UIColor.white.cgColor
+//        customBarButton.layer.shadowRadius =  12
+//        customBarButton.layer.shadowOffset = CGSize(width: 12, height: 12)
+        customBarButton.setTitle("Filter", for: UIControlState.normal)
+        customBarButton.addTarget(self, action: #selector(self.filterClick(sender:)), for: UIControlEvents.touchUpInside)
+        
+        
+        let barButton = UIBarButtonItem()
+        barButton.customView = customBarButton
+        self.navigationItem.leftBarButtonItem = barButton
+        
         self.searchView = UISearchBar()
         searchView = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50))
         searchView.placeholder = "Search"
@@ -51,6 +72,10 @@ class BusinessesViewController: UIViewController {
          */
     }
     
+    
+    func filterClick(sender: UIButton){
+        print("clicked")
+    }
     
     
     func fetchData(searchValue: String){

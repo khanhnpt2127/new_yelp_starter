@@ -72,9 +72,20 @@ class BusinessesViewController: UIViewController {
          */
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        //let nextViewController = segue.destination as! FilterViewController
+    }
     
     func filterClick(sender: UIButton){
-        print("clicked")
+        
+        //let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "filterController") as! FilterViewController
+        
+        let navigationController = UINavigationController(rootViewController: nextViewController)
+        
+        
+        self.navigationController?.present(navigationController, animated: true, completion: nil)
     }
     
     

@@ -71,11 +71,14 @@ class BusinessesViewController: UIViewController {
          }
          */
     }
+//    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        let navigationController = segue.destination as! UINavigationController
+//        let filterViewController = navigationController.topViewController as! FilterViewController
+//        
+//        filterViewController.delegate = self
+//    }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        //let nextViewController = segue.destination as! FilterViewController
-    }
     
     func filterClick(sender: UIButton){
         
@@ -85,7 +88,15 @@ class BusinessesViewController: UIViewController {
         let navigationController = UINavigationController(rootViewController: nextViewController)
         
         
+        nextViewController.delegate = self
+        
+        
         self.navigationController?.present(navigationController, animated: true, completion: nil)
+        
+        
+        
+    
+        
     }
     
     
@@ -109,6 +120,28 @@ class BusinessesViewController: UIViewController {
     }
     
 }
+
+
+extension BusinessesViewController: FilterViewControllerDelegate{
+    func filterController(filterController: FilterViewController, didUpdateValue filters: [String: AnyObject]) {
+        //print(filters)
+        
+        var categories = filters["categories"] as! [String]
+        print(categories)
+        
+        
+        Business.search(with: "", sort: nil, categories: categories, deals: nil) { (businesses: [Business]?, error: Error?) in
+            if let businesses = businesses {
+                self.businesses = businesses
+                
+                
+                self.businessTableView.reloadData()
+            }
+        }
+    }
+
+}
+
 
 
 

@@ -8,9 +8,19 @@
 
 import UIKit
 
+
+@objc protocol FilterViewControllerDelegate {
+    @objc optional func filterController(filterController: FilterViewController, didUpdateValue filters: [String: AnyObject])
+}
+
+
+
 class FilterViewController: UIViewController {
 
     @IBOutlet weak var filterTableView: UITableView!
+    weak var delegate: FilterViewControllerDelegate?
+    
+    
     let categories: [[String: String]] =
         [["name" : "Afghan", "code": "afghani"],
          ["name" : "African", "code": "african"],
@@ -205,7 +215,22 @@ class FilterViewController: UIViewController {
     
     @IBAction func onSave(_ sender: UIBarButtonItem) {
        
-    
+        var filters = [String: AnyObject]()
+        
+        var selectedCategories = [String]()
+        for (row,isSelected) in switchState{
+            if isSelected{
+                selectedCategories.append(categories[row]["code"]!)
+            }
+        }
+        
+        
+        if selectedCategories.count > 0 {
+            filters["categories"] = selectedCategories as AnyObject
+        }
+        
+        
+        delegate?.filterController!(filterController: self, didUpdateValue: filters)
         self.dismiss(animated: true, completion: nil)
         
     }
@@ -213,15 +238,8 @@ class FilterViewController: UIViewController {
     @IBAction func onCancel(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true, completion: nil)
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+    
+ 
 
 }
 
